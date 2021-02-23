@@ -26,15 +26,15 @@
 #include <libopencm3/stm32/tools.h>
 #include <libopencm3/usb/dwc/otg_common.h>
 
-#define APP_ADDRESS	0x08004000  // sector_start_addr[1]
-#define MAX_ADDRESS	0x08040000
+#define MAX_SECTOR_NUM	8
+const uint32_t sector_start_addr[MAX_SECTOR_NUM + 1] = {0x08000000, 0x08004000, 0x08008000,
+		    0x0800C000, 0x08010000, 0x08020000, 0x08040000, 0x08060000, 0x08080000};
+#define APP_SECTOR_NUM	4
+#define APP_ADDRESS	sector_start_addr[APP_SECTOR_NUM]
+#define MAX_ADDRESS	sector_start_addr[MAX_SECTOR_NUM + 1]
 #define SECTOR_SIZE	2048
-
-/* We need a special large control buffer for this device: */
+uint8_t curr_sector_num = APP_SECTOR_NUM;
 uint8_t usbd_control_buffer[SECTOR_SIZE];
-uint8_t curr_sector_num = 1; // sector of APP_ADDRESS
-uint32_t sector_start_addr[8] = {0x08000000, 0x08004000, 0x08008000, 0x0800C000, 
-			 	 0x08010000, 0x08020000, 0x08040000, 0x08060000};
 
 static enum dfu_state usbdfu_state = STATE_DFU_IDLE;
 
@@ -261,7 +261,7 @@ static void jump_to_app_if_valid(void)
 		asm volatile ("msr msp, %0"::"g"
 					(*(volatile uint32_t*)APP_ADDRESS));
 		/* Jump to application */
-		(*(void(**)())(APP_ADDRESS + 4))();
+		(*(void(**)(void))(APP_ADDRESS + 4))();
 	}
 }
 
@@ -338,9 +338,6 @@ int main(void)
 				while(!dfuDnloadDone() && !dfuUploadDone()) {
 					usbd_poll(usbd_dev);
 				}
-				// wait for last status request
-				while((GET_REG(&OTG_FS_DIEPCTL0) &  OTG_DIEPCTL0_NAKSTS) ==  OTG_DIEPCTL0_NAKSTS)
-				break;
 			}
 		}
 	}
