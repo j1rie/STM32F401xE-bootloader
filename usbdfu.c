@@ -26,10 +26,10 @@
 #include <libopencm3/stm32/tools.h>
 #include <libopencm3/usb/dwc/otg_common.h>
 
-#define MAX_SECTOR_NUM	8
-const uint32_t sector_start_addr[MAX_SECTOR_NUM + 1] = {0x08000000, 0x08004000, 0x08008000,
-		    0x0800C000, 0x08010000, 0x08020000, 0x08040000, 0x08060000, 0x08080000};
+const uint32_t sector_start_addr[9] = {0x08000000, 0x08004000, 0x08008000, 0x0800C000,
+				0x08010000, 0x08020000, 0x08040000, 0x08060000, 0x08080000};
 #define APP_SECTOR_NUM	4
+#define MAX_SECTOR_NUM	7
 #define APP_ADDRESS	sector_start_addr[APP_SECTOR_NUM]
 #define MAX_ADDRESS	sector_start_addr[MAX_SECTOR_NUM + 1]
 #define SECTOR_SIZE	2048
