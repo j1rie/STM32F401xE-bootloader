@@ -20,6 +20,6 @@
 BINARY = usbdfu
 CSTD = -std=gnu99
 
-LDSCRIPT = F401CE.ld
+LDSCRIPT = F401xE.ld
 
 include target.mk

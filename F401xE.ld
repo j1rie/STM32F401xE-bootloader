@@ -17,7 +17,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Linker script for STM32F401CE, 512K flash, 96K RAM. */
+/* Linker script for STM32F401xE, 512K flash, 96K RAM. */
 
 /* Define memory regions. */
 MEMORY
